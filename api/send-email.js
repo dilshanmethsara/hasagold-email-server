@@ -1,17 +1,6 @@
 // Vercel Serverless Function for Email Sending
 const nodemailer = require('nodemailer');
 
-// SMTP configuration
-const transporter = nodemailer.createTransporter({
-  host: process.env.SMTP_HOST || 'mail.privateemail.com',
-  port: parseInt(process.env.SMTP_PORT) || 587,
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER || 'no-reply@hasagold.store',
-    pass: process.env.SMTP_PASS || '@hasa1234G'
-  }
-});
-
 // Verification email template
 const getVerificationEmailTemplate = (userName, verificationLink) => {
   return {
@@ -130,6 +119,31 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Email address is required' });
     }
 
+    // Check environment variables
+    const smtpHost = process.env.SMTP_HOST || 'mail.privateemail.com';
+    const smtpPort = parseInt(process.env.SMTP_PORT) || 587;
+    const smtpUser = process.env.SMTP_USER || 'no-reply@hasagold.store';
+    const smtpPass = process.env.SMTP_PASS || '@hasa1234G';
+
+    console.log('🔧 SMTP Config:', { smtpHost, smtpPort, smtpUser });
+
+    // Create transporter with error handling
+    let transporter;
+    try {
+      transporter = nodemailer.createTransporter({
+        host: smtpHost,
+        port: smtpPort,
+        secure: false,
+        auth: {
+          user: smtpUser,
+          pass: smtpPass
+        }
+      });
+    } catch (configError) {
+      console.error('❌ Transporter config error:', configError.message);
+      return res.status(500).json({ error: 'SMTP configuration error: ' + configError.message });
+    }
+
     let emailTemplate;
     
     if (type === 'verification' && verificationLink) {
@@ -141,7 +155,7 @@ module.exports = async function handler(req, res) {
     }
 
     const mailOptions = {
-      from: '"HASA GOLD STORE" <no-reply@hasagold.store>',
+      from: `"HASA GOLD STORE" <${smtpUser}>`,
       to: to,
       subject: emailTemplate.subject,
       html: emailTemplate.html
@@ -160,6 +174,10 @@ module.exports = async function handler(req, res) {
     
   } catch (error) {
     console.error('❌ Email sending error:', error.message);
-    res.status(500).json({ error: 'Failed to send email: ' + error.message });
+    console.error('❌ Full error:', error);
+    res.status(500).json({ 
+      error: 'Failed to send email: ' + error.message,
+      details: error.toString()
+    });
   }
 }
