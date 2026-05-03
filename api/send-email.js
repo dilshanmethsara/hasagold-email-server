@@ -1,10 +1,13 @@
 // Vercel Serverless Function for Email Sending
 const nodemailer = require('nodemailer');
 
-// Verification email template
+// Verification email template - Attractive HASA GOLD STORE design
 const getVerificationEmailTemplate = (userName, verificationLink) => {
+  // Format customer name
+  const customerName = userName && userName !== 'Customer' ? userName : 'Valued Customer';
+  
   return {
-    subject: 'Verify Your HASA GOLD STORE Account - Professional Email',
+    subject: '🎮 Welcome to HASA GOLD STORE - Verify Your Account',
     html: `
       <!DOCTYPE html>
       <html lang="en">
@@ -13,38 +16,291 @@ const getVerificationEmailTemplate = (userName, verificationLink) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Verify Your HASA GOLD STORE Account</title>
         <style>
+          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap');
+          
           * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background: #f4f4f4; }
-          .container { max-width: 650px; margin: 20px auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-          .header { background: linear-gradient(135deg, #FFD700, #FFA500); padding: 40px 30px; text-align: center; }
-          .logo { font-size: 32px; font-weight: 900; color: #000; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); margin-bottom: 10px; }
-          .tagline { color: #000; font-size: 14px; font-weight: 600; opacity: 0.8; }
-          .content { padding: 40px 30px; }
-          .greeting { font-size: 24px; font-weight: 600; color: #333; margin-bottom: 20px; }
-          .message { font-size: 16px; color: #666; margin-bottom: 30px; line-height: 1.8; }
-          .button-container { text-align: center; margin: 30px 0; }
-          .verify-button { display: inline-block; background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; padding: 18px 40px; text-decoration: none; border-radius: 50px; font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 8px 25px rgba(255,215,0,0.3); transition: all 0.3s ease; }
-          .verify-button:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(255,215,0,0.4); }
-          .footer { background: #2c3e50; color: #ecf0f1; padding: 30px; text-align: center; }
-          .footer-logo { font-size: 20px; font-weight: 700; color: #FFD700; margin-bottom: 15px; }
+          
+          body { 
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            padding: 20px; 
+            line-height: 1.6;
+          }
+          
+          .container { 
+            max-width: 650px; 
+            margin: 0 auto; 
+            background: #ffffff; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+          }
+          
+          .header { 
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%); 
+            padding: 50px 30px; 
+            text-align: center; 
+            position: relative;
+            overflow: hidden;
+          }
+          
+          .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 2px, transparent 2px);
+            background-size: 30px 30px;
+            animation: shimmer 20s linear infinite;
+          }
+          
+          @keyframes shimmer {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-30px, -30px) rotate(360deg); }
+          }
+          
+          .logo { 
+            font-size: 42px; 
+            font-weight: 900; 
+            color: #000; 
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.1); 
+            margin-bottom: 10px; 
+            position: relative;
+            z-index: 1;
+            letter-spacing: 2px;
+          }
+          
+          .tagline { 
+            color: #000; 
+            font-size: 16px; 
+            font-weight: 600; 
+            opacity: 0.9; 
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+          }
+          
+          .welcome-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            display: inline-block;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            position: relative;
+            z-index: 1;
+          }
+          
+          .content { 
+            padding: 50px 40px; 
+            background: #ffffff;
+          }
+          
+          .greeting { 
+            font-size: 32px; 
+            font-weight: 700; 
+            color: #333; 
+            margin-bottom: 15px; 
+            text-align: center;
+          }
+          
+          .customer-name {
+            color: #FFA500;
+            font-weight: 900;
+          }
+          
+          .message { 
+            font-size: 16px; 
+            color: #666; 
+            margin-bottom: 30px; 
+            line-height: 1.8; 
+            text-align: center;
+          }
+          
+          .button-container { 
+            text-align: center; 
+            margin: 40px 0; 
+          }
+          
+          .verify-button { 
+            display: inline-block; 
+            background: linear-gradient(135deg, #FFD700, #FFA500); 
+            color: #000; 
+            padding: 20px 50px; 
+            text-decoration: none; 
+            border-radius: 50px; 
+            font-weight: 700; 
+            font-size: 18px; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            box-shadow: 0 10px 30px rgba(255,215,0,0.3); 
+            transition: all 0.3s ease; 
+          }
+          
+          .verify-button:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 40px rgba(255,215,0,0.4); 
+          }
+          
+          .features-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
+            padding: 30px; 
+            border-radius: 16px; 
+            margin: 30px 0; 
+            border-left: 5px solid #FFD700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+          }
+          
+          .features-box h3 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+          
+          .features-box ul {
+            list-style: none;
+            padding: 0;
+          }
+          
+          .features-box li {
+            padding: 10px 0;
+            color: #666;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+          
+          .features-box li::before {
+            content: '✅';
+            font-size: 18px;
+          }
+          
+          .security-notice {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #FFD700;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+          }
+          
+          .security-notice h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          
+          .security-notice p {
+            color: #856404;
+            font-size: 14px;
+            margin: 5px 0;
+          }
+          
+          .footer { 
+            background: linear-gradient(135deg, #2c3e50, #34495e); 
+            color: #ecf0f1; 
+            padding: 40px; 
+            text-align: center; 
+          }
+          
+          .footer-logo { 
+            font-size: 28px; 
+            font-weight: 900; 
+            color: #FFD700; 
+            margin-bottom: 15px; 
+            letter-spacing: 2px;
+          }
+          
+          .footer-links {
+            margin: 20px 0;
+          }
+          
+          .footer-links a {
+            color: #FFD700;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+            font-weight: 600;
+          }
+          
+          .copyright {
+            font-size: 12px;
+            color: #95a5a6;
+            margin-top: 20px;
+          }
+          
+          @media (max-width: 600px) {
+            .content { padding: 30px 20px; }
+            .logo { font-size: 32px; }
+            .greeting { font-size: 24px; }
+            .verify-button { padding: 15px 30px; font-size: 16px; }
+          }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <div class="logo">HASA GOLD STORE</div>
+            <div class="logo">🏆 HASA GOLD STORE</div>
             <div class="tagline">Premium Game Top-Up Services</div>
+            <div class="welcome-badge">🎮 Welcome Aboard!</div>
           </div>
+          
           <div class="content">
-            <h2 class="greeting">Welcome, ${userName}! 🎮</h2>
-            <p class="message">Thank you for joining HASA GOLD STORE! Please verify your email address.</p>
+            <h2 class="greeting">Hi <span class="customer-name">${customerName}</span>! �</h2>
+            
+            <p class="message">
+              Welcome to HASA GOLD STORE! We're thrilled to have you join our elite gaming community. 
+              To get started and unlock all premium features, please verify your email address by clicking the button below.
+            </p>
+            
             <div class="button-container">
-              <a href="${verificationLink}" class="verify-button">Verify Email Address</a>
+              <a href="${verificationLink}" class="verify-button">✓ Verify My Account</a>
+            </div>
+            
+            <div class="features-box">
+              <h3>🎁 What You Get After Verification:</h3>
+              <ul>
+                <li>Instant game top-ups with exclusive discounts</li>
+                <li>Access to VIP member rewards and bonuses</li>
+                <li>24/7 premium customer support</li>
+                <li>Secure payment processing with buyer protection</li>
+                <li>Early access to new games and special offers</li>
+              </ul>
+            </div>
+            
+            <div class="security-notice">
+              <h4>🔒 Security Notice</h4>
+              <p>• This verification link expires in 24 hours</p>
+              <p>• Never share this link with anyone</p>
+              <p>• If you didn't create this account, please ignore this email</p>
+              <p>• Our team will never ask for your password</p>
             </div>
           </div>
+          
           <div class="footer">
             <div class="footer-logo">HASA GOLD STORE</div>
-            <p>© 2024 HASA GOLD STORE. All rights reserved.</p>
+            
+            <div class="footer-links">
+              <a href="https://hasagold.store">Website</a>
+              <a href="https://hasagold.store/support">Support</a>
+              <a href="https://hasagold.store/contact">Contact</a>
+            </div>
+            
+            <div class="copyright">
+              © 2024 HASA GOLD STORE. All rights reserved.<br>
+              This email was sent to verify your account registration.
+            </div>
           </div>
         </div>
       </body>
