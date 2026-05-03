@@ -161,6 +161,12 @@ module.exports = async function handler(req, res) {
       html: emailTemplate.html
     };
 
+    console.log('📧 About to send email with options:', {
+      from: mailOptions.from,
+      to: mailOptions.to,
+      subject: mailOptions.subject
+    });
+
     const result = await transporter.sendMail(mailOptions);
     
     console.log(`✅ Email sent to: ${to}`);
@@ -175,9 +181,12 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     console.error('❌ Email sending error:', error.message);
     console.error('❌ Full error:', error);
+    console.error('❌ Error stack:', error.stack);
+    console.error('❌ Request body:', req.body);
     res.status(500).json({ 
       error: 'Failed to send email: ' + error.message,
-      details: error.toString()
+      details: error.toString(),
+      stack: error.stack
     });
   }
 }
