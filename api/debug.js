@@ -24,7 +24,7 @@ module.exports = async function handler(req, res) {
     // Test transporter creation
     let transporterTest = 'OK';
     try {
-      const testTransporter = nodemailer.createTransporter({
+      const testTransporter = nodemailer.createTransport({
         host: envVars.SMTP_HOST,
         port: parseInt(envVars.SMTP_PORT),
         secure: false,

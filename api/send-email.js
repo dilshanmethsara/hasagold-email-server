@@ -130,7 +130,7 @@ module.exports = async function handler(req, res) {
     // Create transporter with error handling
     let transporter;
     try {
-      transporter = nodemailer.createTransporter({
+      transporter = nodemailer.createTransport({
         host: smtpHost,
         port: smtpPort,
         secure: false,
