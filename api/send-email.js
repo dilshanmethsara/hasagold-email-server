@@ -119,11 +119,11 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Email address is required' });
     }
 
-    // Check environment variables
-    const smtpHost = process.env.SMTP_HOST || 'mail.privateemail.com';
+    // Check environment variables - Use Gmail SMTP for better serverless compatibility
+    const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
     const smtpPort = parseInt(process.env.SMTP_PORT) || 587;
-    const smtpUser = process.env.SMTP_USER || 'no-reply@hasagold.store';
-    const smtpPass = process.env.SMTP_PASS || '@hasa1234G';
+    const smtpUser = process.env.SMTP_USER || 'hasagoldstore@gmail.com';
+    const smtpPass = process.env.SMTP_PASS || 'your-app-password';
 
     console.log('🔧 SMTP Config:', { smtpHost, smtpPort, smtpUser });
 
@@ -137,6 +137,9 @@ module.exports = async function handler(req, res) {
         auth: {
           user: smtpUser,
           pass: smtpPass
+        },
+        tls: {
+          rejectUnauthorized: false
         }
       });
     } catch (configError) {

@@ -13,10 +13,10 @@ Free 24/7 email server for HASA GOLD STORE using Vercel serverless functions.
 ## Environment Variables
 Set these in Vercel project settings:
 ```
-SMTP_HOST = mail.privateemail.com
+SMTP_HOST = smtp.gmail.com
 SMTP_PORT = 587
-SMTP_USER = no-reply@hasagold.store
-SMTP_PASS = @hasa1234G
+SMTP_USER = hasagoldstore@gmail.com
+SMTP_PASS = your-app-password
 ```
 
 ## Deployment Instructions

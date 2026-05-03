@@ -12,9 +12,9 @@ module.exports = async function handler(req, res) {
   try {
     // Check environment variables
     const envVars = {
-      SMTP_HOST: process.env.SMTP_HOST || 'mail.privateemail.com',
+      SMTP_HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
       SMTP_PORT: process.env.SMTP_PORT || '587',
-      SMTP_USER: process.env.SMTP_USER || 'no-reply@hasagold.store',
+      SMTP_USER: process.env.SMTP_USER || 'hasagoldstore@gmail.com',
       SMTP_PASS: process.env.SMTP_PASS ? '[HIDDEN]' : '[NOT SET]'
     };
 
