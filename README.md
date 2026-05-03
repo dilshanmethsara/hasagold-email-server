@@ -8,6 +8,7 @@ Free 24/7 email server for HASA GOLD STORE using Vercel serverless functions.
 - ✅ Professional templates
 - ✅ Custom domain: no-reply@hasagold.store
 - ✅ Free hosting on Vercel
+- ✅ Fixed 404 routing issues
 
 ## Environment Variables
 Set these in Vercel project settings:
@@ -17,6 +18,12 @@ SMTP_PORT = 587
 SMTP_USER = no-reply@hasagold.store
 SMTP_PASS = @hasa1234G
 ```
+
+## Deployment Instructions
+1. Push this code to GitHub
+2. Connect repository to Vercel
+3. Set environment variables in Vercel dashboard
+4. Deploy - the vercel.json file ensures proper routing
 
 ## API Endpoints
 - POST `/api/send-email`
