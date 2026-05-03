@@ -1224,6 +1224,178 @@ const getPurchaseEmailTemplate = (userName, orderDetails) => {
   };
 };
 
+// Order approval template
+const getOrderApprovedTemplate = (userName, orderDetails) => {
+  const customerName = userName && userName !== 'Customer' ? userName : 'Valued Customer';
+  
+  return {
+    subject: `✅ Order Approved - ${orderDetails.gameName} - HASA GOLD STORE`,
+    html: `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Order Approved - HASA GOLD STORE</title>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); padding: 24px; line-height: 1.6; }
+          .email-container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+          .email-header { background: linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%); padding: 48px 32px; text-align: center; }
+          .brand-logo { font-size: 2rem; font-weight: 900; color: white; margin-bottom: 8px; }
+          .email-content { padding: 48px 40px; }
+          .success-icon { width: 80px; height: 80px; background: #10B981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+          .success-icon svg { width: 40px; height: 40px; color: white; }
+          .order-details { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 24px; margin: 24px 0; }
+          .order-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #E2E8F0; }
+          .order-row:last-child { border-bottom: none; }
+          .order-label { color: #64748B; font-size: 0.875rem; }
+          .order-value { font-weight: 600; color: #1E293B; }
+          .footer { background: #F8FAFC; border-top: 1px solid #E2E8F0; padding: 32px 40px; text-align: center; }
+        </style>
+      </head>
+      <body>
+        <div class="email-container">
+          <div class="email-header">
+            <div class="brand-logo">🎮 HASA GOLD STORE</div>
+            <div style="color: white; font-weight: 600;">Order Approved</div>
+          </div>
+          <div class="email-content">
+            <div class="success-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h1 style="text-align: center; font-size: 1.75rem; font-weight: 700; color: #1E293B; margin-bottom: 16px;">
+              Great news, ${customerName}!
+            </h1>
+            <p style="text-align: center; color: #475569; margin-bottom: 24px;">
+              Your order has been approved and is being processed. Your game top-up will be delivered shortly.
+            </p>
+            <div class="order-details">
+              <div class="order-row">
+                <span class="order-label">Order ID</span>
+                <span class="order-value">#${orderDetails.orderId || 'N/A'}</span>
+              </div>
+              <div class="order-row">
+                <span class="order-label">Game</span>
+                <span class="order-value">${orderDetails.gameName}</span>
+              </div>
+              <div class="order-row">
+                <span class="order-label">Package</span>
+                <span class="order-value">${orderDetails.packageName}</span>
+              </div>
+              <div class="order-row">
+                <span class="order-label">Player ID</span>
+                <span class="order-value">${orderDetails.playerId}</span>
+              </div>
+              <div class="order-row">
+                <span class="order-label">Amount</span>
+                <span class="order-value">LKR ${orderDetails.amount?.toLocaleString()}</span>
+              </div>
+            </div>
+            <p style="text-align: center; color: #64748B; font-size: 0.875rem;">
+              If you have any questions, feel free to contact our support team.
+            </p>
+          </div>
+          <div class="footer">
+            <div style="font-weight: 800; margin-bottom: 8px;">HASA GOLD STORE</div>
+            <div style="color: #94A3B8; font-size: 0.8rem;">© 2024 HASA GOLD STORE. All rights reserved.</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  };
+};
+
+// Order rejection template
+const getOrderRejectedTemplate = (userName, orderDetails) => {
+  const customerName = userName && userName !== 'Customer' ? userName : 'Valued Customer';
+  
+  return {
+    subject: `❌ Order Rejected - ${orderDetails.gameName} - HASA GOLD STORE`,
+    html: `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Order Rejected - HASA GOLD STORE</title>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); padding: 24px; line-height: 1.6; }
+          .email-container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+          .email-header { background: linear-gradient(135deg, #DC2626 0%, #B91C1C 50%, #991B1B 100%); padding: 48px 32px; text-align: center; }
+          .brand-logo { font-size: 2rem; font-weight: 900; color: white; margin-bottom: 8px; }
+          .email-content { padding: 48px 40px; }
+          .error-icon { width: 80px; height: 80px; background: #DC2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+          .error-icon svg { width: 40px; height: 40px; color: white; }
+          .order-details { background: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 16px; padding: 24px; margin: 24px 0; }
+          .order-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #FCA5A5; }
+          .order-row:last-child { border-bottom: none; }
+          .order-label { color: #7C2D12; font-size: 0.875rem; }
+          .order-value { font-weight: 600; color: #1E293B; }
+          .support-box { background: #FFFBEB; border: 1px solid #FCD34D; border-radius: 12px; padding: 20px; margin: 24px 0; }
+          .footer { background: #F8FAFC; border-top: 1px solid #E2E8F0; padding: 32px 40px; text-align: center; }
+        </style>
+      </head>
+      <body>
+        <div class="email-container">
+          <div class="email-header">
+            <div class="brand-logo">🎮 HASA GOLD STORE</div>
+            <div style="color: white; font-weight: 600;">Order Rejected</div>
+          </div>
+          <div class="email-content">
+            <div class="error-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            <h1 style="text-align: center; font-size: 1.75rem; font-weight: 700; color: #1E293B; margin-bottom: 16px;">
+              We're sorry, ${customerName}
+            </h1>
+            <p style="text-align: center; color: #475569; margin-bottom: 24px;">
+              Your order could not be processed. Please review the details below and contact our support team for assistance.
+            </p>
+            <div class="order-details">
+              <div class="order-row">
+                <span class="order-label">Order ID</span>
+                <span class="order-value">#${orderDetails.orderId || 'N/A'}</span>
+              </div>
+              <div class="order-row">
+                <span class="order-label">Game</span>
+                <span class="order-value">${orderDetails.gameName}</span>
+              </div>
+              <div class="order-row">
+                <span class="order-label">Package</span>
+                <span class="order-value">${orderDetails.packageName}</span>
+              </div>
+              <div class="order-row">
+                <span class="order-label">Amount</span>
+                <span class="order-value">LKR ${orderDetails.amount?.toLocaleString()}</span>
+              </div>
+            </div>
+            <div class="support-box">
+              <div style="font-weight: 700; color: #92400E; margin-bottom: 8px;">Need Help?</div>
+              <div style="color: #78350F; font-size: 0.875rem;">
+                If you believe this is an error, please contact our support team with your order ID.
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <div style="font-weight: 800; margin-bottom: 8px;">HASA GOLD STORE</div>
+            <div style="color: #94A3B8; font-size: 0.8rem;">© 2024 HASA GOLD STORE. All rights reserved.</div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  };
+};
+
 // Main handler
 module.exports = async function handler(req, res) {
   // Enable CORS
@@ -1284,6 +1456,10 @@ module.exports = async function handler(req, res) {
       emailTemplate = getPasswordResetEmailTemplate(userName || 'Valued Customer', verificationLink);
     } else if (type === 'purchase' && orderDetails) {
       emailTemplate = getPurchaseEmailTemplate(userName || 'Customer', orderDetails);
+    } else if (type === 'order-approved' && orderDetails) {
+      emailTemplate = getOrderApprovedTemplate(userName || 'Valued Customer', orderDetails);
+    } else if (type === 'order-rejected' && orderDetails) {
+      emailTemplate = getOrderRejectedTemplate(userName || 'Valued Customer', orderDetails);
     } else {
       return res.status(400).json({ error: 'Invalid email type or missing parameters' });
     }
