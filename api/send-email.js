@@ -1,6 +1,606 @@
 // Vercel Serverless Function for Email Sending
 const nodemailer = require('nodemailer');
 
+// OTP verification email template - Beautiful HASA GOLD STORE design
+const getOTPEmailTemplate = (userName, otpCode, userEmail) => {
+  // Format customer name
+  const customerName = userName && userName !== 'Customer' ? userName : 'Valued Customer';
+  
+  return {
+    subject: '🔐 HASA GOLD STORE - Verify Your Email',
+    html: `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Verify Your HASA GOLD STORE Account</title>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+          
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          
+          body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
+            padding: 24px; 
+            line-height: 1.6;
+            color: #1e293b;
+          }
+          
+          .email-container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: #ffffff; 
+            border-radius: 24px; 
+            overflow: hidden; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.1);
+          }
+          
+          .email-header { 
+            background: linear-gradient(135deg, #10B981 0%, #059669 50%, #DC2626 100%); 
+            padding: 48px 32px; 
+            text-align: center; 
+            position: relative;
+            overflow: hidden;
+          }
+          
+          .email-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 4s infinite;
+          }
+          
+          @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+          }
+          
+          .brand-logo { 
+            font-size: 2.5rem; 
+            font-weight: 900; 
+            color: white; 
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+          }
+          
+          .brand-tagline { 
+            color: rgba(255,255,255,0.95); 
+            font-size: 1rem; 
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            letter-spacing: 0.5px;
+          }
+          
+          .email-content { 
+            padding: 48px 40px; 
+            background: #ffffff;
+          }
+          
+          .otp-code {
+            background: linear-gradient(135deg, #10B981 0%, #059669 50%, #DC2626 100%);
+            color: white;
+            font-size: 2rem;
+            font-weight: 800;
+            padding: 20px 30px;
+            border-radius: 16px;
+            text-align: center;
+            letter-spacing: 8px;
+            margin: 32px 0;
+            box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+            border: 2px solid rgba(255,255,255,0.1);
+          }
+          
+          .otp-label {
+            color: #64748B;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+            text-align: center;
+          }
+          
+          .instructions {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            border: 1px solid #F59E0B;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 24px 0;
+          }
+          
+          .instructions-title {
+            color: #92400E;
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1.125rem;
+          }
+          
+          .instructions-list {
+            color: #78350F;
+            font-size: 0.95rem;
+            line-height: 1.6;
+          }
+          
+          .instructions-list li {
+            padding: 4px 0;
+            position: relative;
+            padding-left: 20px;
+          }
+          
+          .instructions-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #F59E0B;
+            font-weight: bold;
+          }
+          
+          .security-note {
+            background: #FEF2F2;
+            border: 1px solid #FCA5A5;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            font-size: 0.875rem;
+            color: #7C2D12;
+          }
+          
+          .email-footer { 
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 32px 40px; 
+            text-align: center; 
+          }
+          
+          .footer-brand { 
+            font-size: 1.25rem; 
+            font-weight: 800; 
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+          
+          .footer-links { 
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin: 16px 0; 
+          }
+          
+          .footer-links a { 
+            color: #64748B; 
+            text-decoration: none; 
+            font-weight: 500;
+            transition: color 0.2s;
+            font-size: 0.875rem;
+          }
+          
+          .footer-links a:hover { 
+            color: #0EA5E9; 
+          }
+          
+          .footer-copyright { 
+            font-size: 0.8rem; 
+            color: #94A3B8; 
+            margin-top: 16px;
+            line-height: 1.5;
+          }
+          
+          @media (max-width: 640px) {
+            body { padding: 16px; }
+            .email-container { border-radius: 20px; }
+            .email-header { padding: 32px 24px; }
+            .email-content { padding: 32px 24px; }
+            .otp-code { font-size: 1.5rem; padding: 16px 24px; }
+            .footer-links { flex-direction: column; gap: 12px; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="email-container">
+          <div class="email-header">
+            <div class="brand-logo">
+              🔐 HASA GOLD STORE
+            </div>
+            <div class="brand-tagline">Email Verification</div>
+          </div>
+          
+          <div class="email-content">
+            <h1 class="otp-label">Your Verification Code</h1>
+            <div class="otp-code">${otpCode}</div>
+            
+            <div class="instructions">
+              <h3 class="instructions-title">📧 How to Verify Your Account</h3>
+              <ul class="instructions-list">
+                <li>Go to the verification page: <strong>https://hasagold.store/verify-otp</strong></li>
+                <li>Enter the 6-digit code: <strong>${otpCode}</strong></li>
+                <li>Click "Verify Email" to complete verification</li>
+              </ul>
+            </div>
+            
+            <div class="security-note">
+              ⚠️ <strong>Security Notice:</strong> This code will expire in 15 minutes. If you didn't request this verification, please ignore this email.
+            </div>
+          </div>
+          
+          <div class="email-footer">
+            <div class="footer-brand">HASA GOLD STORE</div>
+            
+            <div class="footer-links">
+              <a href="https://hasagold.store">Website</a>
+              <a href="https://hasagold.store/support">Support</a>
+              <a href="https://hasagold.store/contact">Contact</a>
+            </div>
+            
+            <div class="footer-copyright">
+              © 2024 HASA GOLD STORE. All rights reserved.<br>
+              Your security is our priority!
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  };
+};
+
+// Password reset email template - Beautiful HASA GOLD STORE design
+const getPasswordResetEmailTemplate = (userName, resetLink) => {
+  // Format customer name
+  const customerName = userName && userName !== 'Customer' ? userName : 'Valued Customer';
+  
+  return {
+    subject: '🔐 HASA GOLD STORE - Reset Your Password',
+    html: `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reset Your HASA GOLD STORE Password</title>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+          
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          
+          body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%); 
+            padding: 24px; 
+            line-height: 1.6;
+            color: #1e293b;
+          }
+          
+          .email-container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: #ffffff; 
+            border-radius: 24px; 
+            overflow: hidden; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.1);
+          }
+          
+          .email-header { 
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%); 
+            padding: 48px 32px; 
+            text-align: center; 
+            position: relative;
+            overflow: hidden;
+          }
+          
+          .email-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 4s infinite;
+          }
+          
+          @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+          }
+          
+          .brand-logo { 
+            font-size: 2.5rem; 
+            font-weight: 900; 
+            color: white; 
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+          }
+          
+          .brand-tagline { 
+            color: rgba(255,255,255,0.95); 
+            font-size: 1rem; 
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            letter-spacing: 0.5px;
+          }
+          
+          .email-content { 
+            padding: 48px 40px; 
+            background: #ffffff;
+          }
+          
+          .greeting { 
+            font-size: 1.75rem; 
+            font-weight: 700; 
+            color: #0F172A; 
+            margin-bottom: 16px;
+            text-align: center;
+          }
+          
+          .main-message { 
+            color: #475569; 
+            font-size: 1.125rem; 
+            margin-bottom: 32px;
+            text-align: center;
+            line-height: 1.7;
+          }
+          
+          .reset-button-container { 
+            text-align: center;
+            margin: 40px 0;
+          }
+          
+          .reset-button { 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%; 
+            max-width: 380px; 
+            padding: 16px 32px; 
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); 
+            color: #0F172A; 
+            text-decoration: none; 
+            border-radius: 16px; 
+            font-weight: 700; 
+            font-size: 1.125rem;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(255,215,0,0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+          }
+          
+          .reset-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255,215,0,0.4);
+            background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+          }
+          
+          .security-notice {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            border: 1px solid #F59E0B;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 32px 0;
+            position: relative;
+          }
+          
+          .security-notice::before {
+            content: '🔒';
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            background: #F59E0B;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 1rem;
+          }
+          
+          .security-title {
+            color: #92400E;
+            font-weight: 700;
+            margin-bottom: 12px;
+            margin-top: 8px;
+            font-size: 1.125rem;
+          }
+          
+          .security-text {
+            color: #78350F;
+            font-size: 0.95rem;
+            line-height: 1.6;
+          }
+          
+          .security-text ul {
+            list-style: none;
+            padding: 0;
+          }
+          
+          .security-text li {
+            padding: 4px 0;
+            position: relative;
+            padding-left: 20px;
+          }
+          
+          .security-text li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #F59E0B;
+            font-weight: bold;
+          }
+          
+          .fallback-link {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 24px 0;
+            word-break: break-all;
+          }
+          
+          .fallback-link-label {
+            font-size: 0.875rem;
+            color: #64748B;
+            margin-bottom: 8px;
+            font-weight: 500;
+          }
+          
+          .fallback-link a {
+            color: #0EA5E9;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+          }
+          
+          .fallback-link a:hover {
+            color: #0284C7;
+            text-decoration: underline;
+          }
+          
+          .support-message {
+            text-align: center;
+            color: #64748B;
+            font-size: 0.95rem;
+            margin-top: 32px;
+          }
+          
+          .email-footer { 
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            padding: 32px 40px; 
+            text-align: center; 
+          }
+          
+          .footer-brand { 
+            font-size: 1.25rem; 
+            font-weight: 800; 
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+          
+          .footer-links { 
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin: 16px 0; 
+          }
+          
+          .footer-links a { 
+            color: #64748B; 
+            text-decoration: none; 
+            font-weight: 500;
+            transition: color 0.2s;
+            font-size: 0.875rem;
+          }
+          
+          .footer-links a:hover { 
+            color: #0EA5E9; 
+          }
+          
+          .footer-copyright { 
+            font-size: 0.8rem; 
+            color: #94A3B8; 
+            margin-top: 16px;
+            line-height: 1.5;
+          }
+          
+          @media (max-width: 640px) {
+            body { padding: 16px; }
+            .email-container { border-radius: 20px; }
+            .email-header { padding: 32px 24px; }
+            .email-content { padding: 32px 24px; }
+            .brand-logo { font-size: 2rem; }
+            .greeting { font-size: 1.5rem; }
+            .main-message { font-size: 1rem; }
+            .reset-button { padding: 14px 24px; font-size: 1rem; }
+            .email-footer { padding: 24px; }
+            .footer-links { flex-direction: column; gap: 12px; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="email-container">
+          <div class="email-header">
+            <div class="brand-logo">
+              🎮 HASA GOLD STORE
+            </div>
+            <div class="brand-tagline">Secure Password Reset</div>
+          </div>
+          
+          <div class="email-content">
+            <h1 class="greeting">Hello, ${customerName}!</h1>
+            
+            <p class="main-message">
+              We received a request to reset your password for your HASA GOLD STORE account. 
+              Click the button below to securely reset your password.
+            </p>
+            
+            <div class="reset-button-container">
+              <a href="${resetLink}" class="reset-button">
+                🔐 Reset My Password
+              </a>
+            </div>
+            
+            <div class="security-notice">
+              <h3 class="security-title">Security Information</h3>
+              <div class="security-text">
+                <ul>
+                  <li>This link will expire in 1 hour for security reasons</li>
+                  <li>If you didn't request this password reset, please ignore this email</li>
+                  <li>Your account remains secure until you click the reset link</li>
+                  <li>Always ensure you're on the official HASA GOLD STORE website</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="fallback-link">
+              <div class="fallback-link-label">If the button above doesn't work, copy and paste this link:</div>
+              <a href="${resetLink}">${resetLink}</a>
+            </div>
+            
+            <p class="support-message">
+              If you have any questions or need assistance, our support team is here to help!
+            </p>
+          </div>
+          
+          <div class="email-footer">
+            <div class="footer-brand">HASA GOLD STORE</div>
+            
+            <div class="footer-links">
+              <a href="https://hasagold.store">Website</a>
+              <a href="https://hasagold.store/support">Support</a>
+              <a href="https://hasagold.store/contact">Contact</a>
+            </div>
+            
+            <div class="footer-copyright">
+              © 2024 HASA GOLD STORE. All rights reserved.<br>
+              Your security is our priority!
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  };
+};
+
 // Verification email template - Attractive HASA GOLD STORE design
 const getVerificationEmailTemplate = (userName, verificationLink) => {
   // Format customer name
@@ -640,7 +1240,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { type, to, userName, verificationLink, orderDetails } = req.body;
+    const { type, to, userName, verificationLink, orderDetails, otpCode } = req.body;
 
     if (!to) {
       return res.status(400).json({ error: 'Email address is required' });
@@ -678,6 +1278,10 @@ module.exports = async function handler(req, res) {
     
     if (type === 'verification' && verificationLink) {
       emailTemplate = getVerificationEmailTemplate(userName || 'Gamer', verificationLink);
+    } else if (type === 'otp' && otpCode) {
+      emailTemplate = getOTPEmailTemplate(userName || 'Valued Customer', otpCode, to);
+    } else if (type === 'password-reset' && verificationLink) {
+      emailTemplate = getPasswordResetEmailTemplate(userName || 'Valued Customer', verificationLink);
     } else if (type === 'purchase' && orderDetails) {
       emailTemplate = getPurchaseEmailTemplate(userName || 'Customer', orderDetails);
     } else {
