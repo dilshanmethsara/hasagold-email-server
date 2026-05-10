@@ -2,7 +2,7 @@
 const nodemailer = require('nodemailer');
 
 // SMTP configuration
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'mail.privateemail.com',
   port: parseInt(process.env.SMTP_PORT) || 587,
   secure: false,
